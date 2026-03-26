@@ -128,6 +128,38 @@ This information is usually sufficient for analysing historical tenders.
 
 ---
 
+## Pagination Rule — Always Exhaust Search Results
+
+When searching board items by keyword using `searchTerm`, results are paginated.
+The AI must follow these rules without exception:
+
+1. **Always check `has_more`** in every response. If `has_more` is `true`, a
+   `nextCursor` value will be present — use it to fetch the next page immediately.
+
+2. **Keep paginating until `has_more` is `false`**. Do not stop after the first
+   page and do not assume the first page contains all relevant results. A matching
+   project may appear on any page.
+
+3. **Always run a separate project-number search** in addition to keyword searches.
+   Project numbers (e.g. "3177") may not surface on the same result page as
+   name-based keyword results. Search the project number explicitly and treat it
+   as a distinct search pass.
+
+4. **Use multiple keyword variations** where terminology may differ. For example,
+   when searching for gift wrap tenders, search "gift wrap", "valentine gift",
+   and any other likely phrasing separately, paginating through each fully.
+
+5. **Do not conclude a search is complete** until all of the following are done:
+   - All keyword search pages exhausted (`has_more: false`)
+   - A dedicated project-number search performed (if a number is known)
+   - Results from all passes reviewed together before shortlisting matches
+
+Failure to follow this rule risks missing directly relevant historical projects,
+as demonstrated by ALDI USA 3177 Valentines Gift Wrap being missed on the first
+search pass.
+
+---
+
 ## Query Template – Retrieve Subitems
 
 Some supplier and production information is stored in subitems.
